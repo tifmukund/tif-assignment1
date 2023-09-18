@@ -27,7 +27,7 @@ model Community {
   slug       String   @unique @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  owner      String   @unique
+  owner      String
   useref     User     @relation(fields: [owner], references: [id])
   members    Member[]
 }

@@ -4,21 +4,27 @@ import { Snowflake } from "@theinternetfolks/snowflake";
 
 const prisma = new PrismaClient()
 
-async function main() {
+export default async function main(name:String) {
   // ... you will write your Prisma Client queries here
   // await ;
   const snowflakeId = Snowflake.generate();
   console.log("Sid for Role: ",snowflakeId);
-  await prisma.role.create({
+  const role = await prisma.role.create({
     data: {
       id: snowflakeId,
-      name: "admin"
+      name: `${name}`
     }
   })
-
+  console.log("res of create user:", role);
+  const response = {
+    status:true,
+    content:{
+      data:role
+    }
+  }
+  return response;
 }
 
-main()
 // main()
 //   .then(async () => {
 //     await prisma.$disconnect() 

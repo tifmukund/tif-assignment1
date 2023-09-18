@@ -65,19 +65,30 @@ export default async function main(ownerId, memberId) {
         //       },
         //     },
         //   });
-
-        //   console.log("role for user named:",user.name,"\n role ref:")
-        // //1 checking for both Admin & Moderator
-        // user.members.forEach((member) => {
-        //     console.log(member.roleref);
+          
+        //   console.log('User:', user);
+          
+        //   // Check if the user has members
+        //   if (!user || !user.members) {
+        //     console.log('User or members not found');
+        //     return { status: false, error: 'User or members not found' };
+        //   }
+          
+        //   console.log('Role for user named:', user.name, '\nRole refs:');
+          
+        //   // Iterate through members
+        //   user.members.forEach((member) => {
+        //     console.log('Member:', member);
         //     if (member.roleref.name === 'Community Admin' || member.roleref.name === 'Community Moderator') {
         //       isAuth = true;
         //     }
-        // });
-        // if (!isAuth) {
-        //     console.log("Not authorised for signed in user")
-        //     return { status: false, error:"NOT_ALLOWED_ACCESS"}
-        //  }
+        //   });
+          
+        //   if (!isAuth) {
+        //     console.log('Not authorized for signed-in user');
+        //     return { status: false, error: 'NOT_ALLOWED_ACCESS' };
+        //   }
+          
 
         
 

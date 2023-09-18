@@ -13,6 +13,7 @@ import cookieAuth from "./middleware/cookieJwtAuth";
 import createUser from "./createUser";
 import getUser from "./getUser"
 import createCommunity from "./createCommunity"
+import getCommunity from './getCommunity'
 
 
 
@@ -27,8 +28,9 @@ interface CustomRequest extends Request {
     user?: any; // change this to only include id, name, email
   }
 
-app.post('/v1/role',cookieAuth,async (req, res) =>{
-    const {name} = req.body;
+app.post('/v1/role',async (req, res) =>{
+    try {
+        const {name} = req.body;
     // console.log(req);
     console.log("name role:",name)
     if(name !== "Community Admin" && name !== "Community Member"){
@@ -38,7 +40,14 @@ app.post('/v1/role',cookieAuth,async (req, res) =>{
         })
     }
     //add validation, min len 2
-    return createRole(name);
+    const response = await createRole(name);
+    
+    return res.json(response);
+    } catch (error) {
+        console.error("error creating roles",error);
+    res.status(500).json({ status: false, error: 'Internal Server Error on Create Role' });
+    }
+    
 
 })
 app.get('/v1/role',async (req, res) => {
@@ -72,7 +81,7 @@ app.get('/v1/role',async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("error getting all roles & meta",error);
-    res.status(500).json({ status: false, error: 'Internal Server Error on Get All' });
+    res.status(500).json({ status: false, error: 'Internal Server Error on Get All Roles' });
   }
 })
 
@@ -205,6 +214,18 @@ app.get('/v1/auth/me',cookieAuth, async (req:CustomRequest, res:Response) => {
     });
 })
 
+app.post('/v1/member', async (req:CustomRequest, res) => {
+    try {
+        const current_user_id = req.user.id;
+
+        const { communityId, userIdToAdd, roleId } = req.body;
+
+    } catch (error) {
+        res.status(500).json({ status: false, message: 'Internal server error at adding member' });
+    }
+})
+
+//COMMUNITY
 app.post('/v1/community',cookieAuth,async (req:CustomRequest, res) => {
     try {
         // Extract the user's ID from the access token (you should implement this)
@@ -214,15 +235,37 @@ app.post('/v1/community',cookieAuth,async (req:CustomRequest, res) => {
         // Extract community data from the request body
         const { name } = req.body;
         const response = await createCommunity(ownerId, name);
-        
+        // console.log("response in post comm:", response);
         if(!response){
             res.status(500).json({ status: false, message: 'Cannot create community' });
         }
-        return response;
+        res.json(response);
     } catch (error) {
         res.status(500).json({ status: false, message: 'Internal server error at creating community' });
     }
     
+})
+
+//get all com
+app.get('/v1/community', async( req, res) =>{
+    try {
+        let page:number = 1;
+        let pageSize:number = 10;
+        // const { page, pageSize} = req.query;
+        const response = await getCommunity(page, pageSize);
+
+
+        if (Object.keys(response).length === 0) {
+            return res.status(401).json({ message: 'Some error in getting all Communites' });
+        }
+
+        res.json(response);
+    } catch (error) {
+        console.error("error getting all communities",error);
+        res.status(500).json({ status: false, error: 'Internal Server Error on Get Communities' });
+        }
+    
+
 })
 
 

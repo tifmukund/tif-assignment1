@@ -25,13 +25,14 @@ export default async function main(ownerId, name) {
                 }
             }
         })
-        console.log("Community:", community)
+        // console.log("Community:", community)
         const response = {
             status: true,
             content: {
             data: community
             }
         }
+        // console.log("response in createCOm:", response)
 
         return response;
     } catch (error) {

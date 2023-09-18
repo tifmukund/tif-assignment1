@@ -15,7 +15,7 @@ model Member {
   user         String
   role         String
   community    String
-  createdAt    DateTime  @default(now())
+  created_at   DateTime  @default(now())
   userref      User      @relation(fields: [user], references: [id])
   roleref      Role      @relation(fields: [role], references: [id])
   communityref Community @relation(fields: [community], references: [id])

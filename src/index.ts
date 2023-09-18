@@ -14,7 +14,7 @@ import createUser from "./createUser";
 import getUser from "./getUser"
 import createCommunity from "./createCommunity"
 import getCommunity from './getCommunity'
-
+import createMember from "./createMember"
 
 
 const app = express();
@@ -214,12 +214,33 @@ app.get('/v1/auth/me',cookieAuth, async (req:CustomRequest, res:Response) => {
     });
 })
 
-app.post('/v1/member', async (req:CustomRequest, res) => {
+app.post('/v1/member',cookieAuth ,async (req:CustomRequest, res) => {
     try {
-        const current_user_id = req.user.id;
+      const current_user_id = req.user.id;
+      /*
+      {
+  "community": "7109553926780024141",
+  "user": "7109201249130404923",
+  "role": "7109594066994020356"
+}
+      */
+        //7109612504807405286 - admin
+        //7109612609366403189 - member
 
-        const { communityId, userIdToAdd, roleId } = req.body;
+        //7109613196056130181 -westworld
+        //7109613283318079435 - westworld6
 
+        //7109612844608002315 -chotu
+        //7109613617232670940 - chotu3
+        //7109613727069370839 - chotu4
+        //7109530067186819030 - dlores
+      const { community:communityId, user:userId,role: roleId } = req.body;
+
+      console.log(current_user_id, "communityid:", communityId)
+
+      const response = await createMember(current_user_id,communityId, userId, roleId )
+
+      return res.json(response);
     } catch (error) {
         res.status(500).json({ status: false, message: 'Internal server error at adding member' });
     }
@@ -253,12 +274,6 @@ app.get('/v1/community', async( req, res) =>{
         let pageSize:number = 10;
         // const { page, pageSize} = req.query;
         const response = await getCommunity(page, pageSize);
-
-
-        if (Object.keys(response).length === 0) {
-            return res.status(401).json({ message: 'Some error in getting all Communites' });
-        }
-
         res.json(response);
     } catch (error) {
         console.error("error getting all communities",error);

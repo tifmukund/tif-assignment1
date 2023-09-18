@@ -4,7 +4,7 @@ CREATE TABLE "Member" (
     "user" TEXT NOT NULL,
     "role" TEXT NOT NULL,
     "community" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Member_pkey" PRIMARY KEY ("id")
 );
@@ -51,9 +51,6 @@ CREATE UNIQUE INDEX "Community_id_key" ON "Community"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Community_slug_key" ON "Community"("slug");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Community_owner_key" ON "Community"("owner");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Role_id_key" ON "Role"("id");

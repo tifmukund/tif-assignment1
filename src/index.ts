@@ -14,7 +14,9 @@ import createUser from "./createUser";
 import getUser from "./getUser"
 import createCommunity from "./createCommunity"
 import getCommunity from './getCommunity'
+import getCommunityMembers from './getCommunityMembers'
 import createMember from "./createMember"
+import deleteMember from './deleteMember'
 
 
 const app = express();
@@ -33,7 +35,7 @@ app.post('/v1/role',async (req, res) =>{
         const {name} = req.body;
     // console.log(req);
     console.log("name role:",name)
-    if(name !== "Community Admin" && name !== "Community Member"){
+    if(name !== "Community Admin" && name !== "Community Member" && name !== "Community Moderator"){
         return res.json({
             status:false,
             message:"Please select name: Community Admin or Community Member"
@@ -219,17 +221,20 @@ app.post('/v1/member',cookieAuth ,async (req:CustomRequest, res) => {
       const current_user_id = req.user.id;
       /*
       {
-  "community": "7109553926780024141",
-  "user": "7109201249130404923",
-  "role": "7109594066994020356"
+  "community": "7109613196056130181",
+  "user": "7109613727069370839",
+  "role": "7109612609366403189"
 }
       */
         //7109612504807405286 - admin
         //7109612609366403189 - member
+        //7109621411597153011 - moderator
 
-        //7109613196056130181 -westworld
+        //7109613196056130181 -westworld (chotu2 -owner)
         //7109613283318079435 - westworld6
 
+        
+        //vGuFQ1nJSSrdMaYV1LiN3G1i
         //7109612844608002315 -chotu
         //7109613617232670940 - chotu3
         //7109613727069370839 - chotu4
@@ -244,6 +249,27 @@ app.post('/v1/member',cookieAuth ,async (req:CustomRequest, res) => {
     } catch (error) {
         res.status(500).json({ status: false, message: 'Internal server error at adding member' });
     }
+})
+
+app.delete('/v1/member/:id', cookieAuth,async (req:CustomRequest, res) => {
+  try {
+    const memberId = req.params.id;
+    const current_userId = req.user.id;
+
+    console.log("Delete memeber:",memberId," \nCurrent user", current_userId);
+    
+    const response = await deleteMember(current_userId, memberId);
+    if(!response){
+      return {
+        status:false,
+        error:"Not Auth"
+      }
+    }
+
+    return res.json({status:true});
+  } catch (error) {
+    res.status(500).json({ status: false, message: 'Internal server error at removing member' });
+  }
 })
 
 //COMMUNITY
@@ -281,6 +307,22 @@ app.get('/v1/community', async( req, res) =>{
         }
     
 
+})
+
+app.get('/v1/community/:id/members', async(req, res) =>{
+  try {
+    const communityId = req.params.id;
+    const pageSize = 10;
+    const page = 1;
+    // const page = parseInt(req.query.page || 1, 10);
+    console.log("Community Id:",communityId);
+    const  response = await getCommunityMembers(communityId, page, pageSize);
+    res.json(response);
+  } catch (error) {
+    console.log("Error in getting all members of the particular community", error);
+    res.status(500).json({ status: false, error: 'Internal Server Error on Getting All Members of Community' })
+  }
+  
 })
 
 

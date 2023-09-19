@@ -16,7 +16,7 @@ export default async function main(pageSize, page, userId) {
         });
 
         if(!owned){
-            return {status: false, error:"User does not have any communities"}
+            return {status: false, error:"User is not owner of any communities."}
         }
         //count communities he owns
         const totalowned = await prisma.community.count({
@@ -49,7 +49,7 @@ export default async function main(pageSize, page, userId) {
         return response;
 
     } catch (error) {
-        console.log("Error in removing member:", error);
+        console.log("Error in getting current user created communities:", error);
         return {status: false, error:"Error getting Owned Community"}
     }
 }

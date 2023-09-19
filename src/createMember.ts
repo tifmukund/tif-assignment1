@@ -45,7 +45,28 @@ export default async function main(owner_id, communityId, userIdToAdd, roleId ) 
         console.log("Sid for Member: ",snowflakeId);
 
         if(community && community.owner === owner_id){
-            
+            //check if user is already a member
+
+            /*
+include:{
+                    userref:{
+                        select:{
+                            id:true
+                        }
+                    }
+                }
+            */
+            const checkMember = await prisma.member.findFirst({
+                where:{
+                    user:userIdToAdd,
+                    community:communityId
+                },
+                
+            })
+
+            if(checkMember){
+                return {status: false, error:"User already exists as member of community"}
+            }
             const newMember = await prisma.member.create({
                 data: {
                 id: snowflakeId,
@@ -82,7 +103,7 @@ export default async function main(owner_id, communityId, userIdToAdd, roleId ) 
 
             return response;
         } else{
-            // owner is not verified
+            // unauth user
             return {
                 status: false,
                 error: 'NOT_ALLOWED_ACCESS' 

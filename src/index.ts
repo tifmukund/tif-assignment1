@@ -16,8 +16,10 @@ import createCommunity from "./createCommunity"
 import getCommunity from './getCommunity'
 import getCommunityMembers from './getCommunityMembers'
 import getOwnerCommunity from './getOwnerCommunity'
+import getMyJoinedCommunity from './getMyJoinedCommunity'
 import createMember from "./createMember"
 import deleteMember from './deleteMember'
+import { validateSignup, validateCreateCommunity, validateCreateRole } from "./middleware/validator";
 
 
 const app = express();
@@ -26,31 +28,38 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); 
 
 //interfaces, enums &types
-
 interface CustomRequest extends Request {
     user?: any; // change this to only include id, name, email
   }
 
+  //Set header in postman for json
+
 app.post('/v1/role',async (req, res) =>{
+  
     try {
-        const {name} = req.body;
-    // console.log(req);
-    console.log("name role:",name)
-    if(name !== "Community Admin" && name !== "Community Member" && name !== "Community Moderator"){
+      //validation
+      const {error, value} =  validateCreateRole(req.body);
+      if(error){
         return res.json({
-            status:false,
-            message:"Please select name: Community Admin or Community Member"
+          status: false,
+          error: error.details[0].message
         })
-    }
-    //add validation, min len 2
-    const response = await createRole(name);
-    
-    return res.json(response);
-    } catch (error) {
+      }
+      const {name} = req.body;
+      if(name !== "Community Admin" && name !== "Community Member" && name !== "Community Moderator"){
+        return res.json({
+          status:false,
+          message:"Please select name: Community Admin or Community Member"
+          })
+        }
+      //add validation, min len 2
+      const response = await createRole(name);
+      
+      return res.json(response);
+      } catch (error) {
         console.error("error creating roles",error);
-    res.status(500).json({ status: false, error: 'Internal Server Error on Create Role' });
-    }
-    
+        res.status(500).json({ status: false, error: 'Internal Server Error on Create Role' });
+      }
 
 })
 app.get('/v1/role',async (req, res) => {
@@ -89,11 +98,16 @@ app.get('/v1/role',async (req, res) => {
 })
 
 app.post('/v1/auth/signup',async (req, res) =>{
-    // Check for validation errors
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ status: false, errors: errors.array() });
-//   }
+  // validation
+  // stop at first invalid
+  const {error, value} = validateSignup(req.body)
+  if(error){
+    return res.json({
+      status:false,
+      error:error.details[0].message[0].message
+    })
+    return;
+  }
 
   try {
     // Hash the password
@@ -217,8 +231,10 @@ app.get('/v1/auth/me',cookieAuth, async (req:CustomRequest, res:Response) => {
     });
 })
 
+//create member, if current signed user is owner
 app.post('/v1/member',cookieAuth ,async (req:CustomRequest, res) => {
     try {
+      //to check if he is owner
       const current_user_id = req.user.id;
       /*
       {
@@ -252,6 +268,7 @@ app.post('/v1/member',cookieAuth ,async (req:CustomRequest, res) => {
     }
 })
 
+//del a member using his memberId if the signed user is owner/moderator
 app.delete('/v1/member/:id', cookieAuth,async (req:CustomRequest, res) => {
   try {
     const memberId = req.params.id;
@@ -274,14 +291,24 @@ app.delete('/v1/member/:id', cookieAuth,async (req:CustomRequest, res) => {
 })
 
 //COMMUNITY
+//create com
 app.post('/v1/community',cookieAuth,async (req:CustomRequest, res) => {
     try {
-        // Extract the user's ID from the access token (you should implement this)
+        
         const ownerId = req.user.id;
-        console.log("Current user id who wants to create a community:", ownerId);
+        // console.log("Current user id who wants to create a community:", ownerId);
 
-        // Extract community data from the request body
+        //validation
+        const {error, value} = validateCreateCommunity(req.body);
+
+        if(error){
+          res.json({
+            status:false,
+            error: error.details[0].message
+          })
+        }
         const { name } = req.body;
+        
         const response = await createCommunity(ownerId, name);
         // console.log("response in post comm:", response);
         if(!response){
@@ -315,7 +342,7 @@ app.get('/v1/community/me/owner',cookieAuth ,async(req:CustomRequest, res) => {
     const page = 1; 
     const userId = await req.user.id;
     const response = await getOwnerCommunity(pageSize, page, userId);
-    
+
     res.json(response);
   } catch (error) {
     console.error("error getting owned communities",error);
@@ -323,6 +350,7 @@ app.get('/v1/community/me/owner',cookieAuth ,async(req:CustomRequest, res) => {
   }
 })
 
+//get members of current com
 app.get('/v1/community/:id/members', async(req, res) =>{
   try {
     const communityId = req.params.id;
@@ -338,6 +366,25 @@ app.get('/v1/community/:id/members', async(req, res) =>{
   }
   
 })
+
+//get the communities current user is in as mem?
+app.get('/v1/community/me/member', cookieAuth, async(req:CustomRequest, res) =>{
+  try {
+    const pageSize = 10; 
+    const page = 1; 
+
+    const userId = await req.user.id;
+    const response = await getMyJoinedCommunity(pageSize, page, userId);
+
+    res.json(response);
+  } catch (error) {
+    console.log("Error in getting all communites of the signed in user", error);
+    res.status(500).json({ status: false, error: 'Internal Server Error on Getting All Your Communites' })
+  }
+
+    
+})
+
 
 
 const PORT = process.env.PORT || 3002;

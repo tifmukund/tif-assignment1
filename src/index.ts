@@ -15,6 +15,7 @@ import getUser from "./getUser"
 import createCommunity from "./createCommunity"
 import getCommunity from './getCommunity'
 import getCommunityMembers from './getCommunityMembers'
+import getOwnerCommunity from './getOwnerCommunity'
 import createMember from "./createMember"
 import deleteMember from './deleteMember'
 
@@ -305,8 +306,21 @@ app.get('/v1/community', async( req, res) =>{
         console.error("error getting all communities",error);
         res.status(500).json({ status: false, error: 'Internal Server Error on Get Communities' });
         }
-    
+})
 
+//get owned com
+app.get('/v1/community/me/owner',cookieAuth ,async(req:CustomRequest, res) => {
+  try {
+    const pageSize = 10; 
+    const page = 1; 
+    const userId = await req.user.id;
+    const response = await getOwnerCommunity(pageSize, page, userId);
+    
+    res.json(response);
+  } catch (error) {
+    console.error("error getting owned communities",error);
+    res.status(500).json({ status: false, error: 'Internal Server Error on Get  Owned Communities' });
+  }
 })
 
 app.get('/v1/community/:id/members', async(req, res) =>{

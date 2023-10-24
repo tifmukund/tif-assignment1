@@ -10,6 +10,12 @@ export default async function main(owner_id, communityId, userIdToAdd, roleId ) 
             where: { id: communityId },
             select: { owner: true },
         });
+        if(!community){
+            return {
+                status:false,
+                error:"Community does not exists"
+            }
+        }
         console.log("requested community where member has to be added:", community);
 
         //check if userId exists
@@ -24,7 +30,6 @@ export default async function main(owner_id, communityId, userIdToAdd, roleId ) 
                 error:"User does not exists"
             }
         }
-        //check if user is already not in community
 
         //check if roleId exists
         const role = await prisma.role.findUnique({
@@ -44,7 +49,7 @@ export default async function main(owner_id, communityId, userIdToAdd, roleId ) 
         const snowflakeId = Snowflake.generate();
         console.log("Sid for Member: ",snowflakeId);
 
-        if(community && community.owner === owner_id){
+        if(community.owner === owner_id){
             //check if user is already a member
 
             /*

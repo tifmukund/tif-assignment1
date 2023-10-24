@@ -16,7 +16,7 @@ export default async function main(pageSize, page, userId) {
         
         const totalPages = Math.ceil(totalJoinedCommunities / pageSize);
 
-
+        // get all rows where user is member, then using community ref, get details of that com, further using userref inside it get the owner id & name
         const joinedCommunities = await prisma.member.findMany({
         where: {
             user: userId, // Filter by the user's ID

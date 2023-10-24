@@ -2,13 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import cookieParser from 'cookie-parser';
-
 import roleRoutes from "./routes/roleRoutes"
 import authRoutes from './routes/authRoutes';
 import communityRoutes from './routes/communityRoutes';
 import memberRoutes from './routes/memberRoutes';
-
-
 
 const app = express();
 app.use(express.json());

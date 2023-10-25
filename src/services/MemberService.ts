@@ -1,6 +1,6 @@
-import Database from "src/loaders/v1/database";
+import Database from "../loaders/v1/database";
 import { Snowflake } from "@theinternetfolks/snowflake";
-import Logger from "src/loaders/v1/logger";
+import Logger from "../loaders/v1/logger";
 class MemberService{
     static async createMember(owner_id:string, communityId:string, userIdToAdd:string, roleId:string){
         try {

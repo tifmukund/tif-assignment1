@@ -10,7 +10,7 @@ import Database from './loaders/v1/database';
 
 const server = async (): Promise<express.Application> => {
     const app = express();
-  
+    console.log("server")
     //Loaders
     Env.Loader();
     Logger.Loader();
@@ -25,6 +25,6 @@ const server = async (): Promise<express.Application> => {
     app.use('/v1/community', communityRoutes);
     app.use('/v1/member', memberRoutes);
     return app;
-  };
+};
   
   export default server;

@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "env-cmd -f config/.env.$BUILD_ENV node dist/index.ts",
+    "start": "env-cmd -f src/config/.env.development node dist/index.js",
     "build": "tsc -b",
-    "dev": "env-cmd -f config/.env.development nodemon src/index.ts",
-    "start-env": "env-cmd -f config/.env.$BUILD_ENV node dist/index.ts"
+    "dev": "env-cmd -f src/config/.env.development nodemon src/index.ts",
+    "start-env": "env-cmd -f .src/config/.env.$BUILD_ENV node dist/index.ts"
   },
   "author": "",
   "license": "ISC",

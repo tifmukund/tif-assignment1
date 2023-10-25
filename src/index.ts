@@ -4,7 +4,8 @@ import server from "./server";
 
 (async () => {
   const app = await server();
-
+  console.log("index.ts")
+  Logger.instance.info('in server')
   app.listen(Env.variables.PORT,() => { 
     Logger.instance.info(`listening on port: ${Env.variables.PORT}`)
   })

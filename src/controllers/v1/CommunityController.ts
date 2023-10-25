@@ -1,7 +1,7 @@
 import express from "express";
 import { validateCreateCommunity } from '../../middleware/validator';
-import CommunityService from "src/services/CommunityServices";
-import Logger from "src/loaders/v1/logger";
+import CommunityService from "../../services/CommunityServices";
+import Logger from "../../loaders/v1/logger";
 
 interface CustomRequest extends express.Request {
     // Add your custom properties here

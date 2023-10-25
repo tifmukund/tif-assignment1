@@ -1,6 +1,6 @@
 import express from "express"
 import { validateCreateRole } from '../../middleware/validator';
-import RoleService from "src/services/RoleService";
+import RoleService from "../../services/RoleService";
 
 class RoleController{
     static async createRole(req:express.Request, res:express.Response){

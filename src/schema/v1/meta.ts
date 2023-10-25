@@ -1,4 +1,4 @@
-import { listToColumn } from "src/universe/v1/library/helper";
+import { listToColumn } from "../../universe/v1/library/helper";
 
 const CollectionsList = [
     "user",

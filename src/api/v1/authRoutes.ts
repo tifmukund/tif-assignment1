@@ -1,6 +1,6 @@
 import express from 'express';
 import cookieAuth from '../../middleware/cookieJwtAuth';
-import AuthController from '@controllers/v1/AuthController';
+import AuthController from '../../controllers/v1/AuthController';
 
 let router = express.Router();
 

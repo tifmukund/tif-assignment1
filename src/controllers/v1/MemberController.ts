@@ -1,5 +1,5 @@
 import express from "express"
-import MemberService from "src/services/MemberService";
+import MemberService from "../../services/MemberService";
 
 interface CustomRequest extends express.Request {
     // Add your custom properties here

@@ -1,6 +1,6 @@
 import express from 'express';
 let router = express.Router();
-import CommunityController from '@controllers/v1/CommunityController';
+import CommunityController from '../../controllers/v1/CommunityController';
 import cookieAuth from '../../middleware/cookieJwtAuth';
 
 

@@ -155,7 +155,7 @@ class CommunityService{
             return response;
     
         } catch (error) {
-            console.log("Error in getting current user created communities:", error);
+            Logger.instance.error("Error in getting current user created communities:", error);
             return {status: false, error:"Error getting Owned Community"}
         }
     }

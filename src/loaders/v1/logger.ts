@@ -1,5 +1,4 @@
 import winston from "winston";
-
 class Logger{
     static instance: winston.Logger | Console
 
@@ -20,8 +19,6 @@ class Logger{
             transports,
         })
     }
-
-    
 }
 
 export default Logger;

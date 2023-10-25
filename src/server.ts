@@ -10,10 +10,9 @@ import Database from './loaders/v1/database';
 
 const server = async (): Promise<express.Application> => {
     const app = express();
-    console.log("server")
     //Loaders
-    Env.Loader();
     Logger.Loader();
+    Env.Loader();
     await Database.Loader();
     await FrameworkLoader(app);
   

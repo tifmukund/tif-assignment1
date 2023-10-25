@@ -12,8 +12,7 @@ class Env{
     static Loader(){
         const values: Record<string, string> = {}
 
-        Logger.instance.info('Env loader called')
-        console.log("env loader")
+        // Logger.instance.info('Env loader loaded')
 
         for (const key of Env.names) {
             const value = process.env[key];

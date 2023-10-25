@@ -8,6 +8,16 @@
     "forceConsistentCasingInFileNames": true,  
     "strict": false, 
     "outDir": "./dist",
-    "skipLibCheck": true  
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@api/*": ["src/api/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@loaders/*":["src/loaders/v1"],
+      "@config/*": ["src/config/*"],
+      "@libraries/*": ["src/universe/v1/libraries/*"],
+      "@services/*": ["src/services/v1/*"],
+      "@universe/*": ["universe/*"]
+    }
   }
 }

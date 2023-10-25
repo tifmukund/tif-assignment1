@@ -1,16 +1,20 @@
 import express from 'express'
-import roleRoutes from "./api/roleRoutes"
-import authRoutes from './api/authRoutes';
-import communityRoutes from './api/communityRoutes';
-import memberRoutes from './api/memberRoutes';
-import FrameworkLoader from './loaders/framework';
-import Logger from './loaders/logger';
+import roleRoutes from "./api/v1/roleRoutes"
+import authRoutes from './api/v1/authRoutes';
+import communityRoutes from './api/v1/communityRoutes';
+import memberRoutes from './api/v1/memberRoutes';
+import FrameworkLoader from './loaders/v1/framework';
+import Logger from './loaders/v1/logger';
+import Env from './loaders/v1/env';
+import Database from './loaders/v1/database';
 
 const server = async (): Promise<express.Application> => {
     const app = express();
   
     //Loaders
+    Env.Loader();
     Logger.Loader();
+    await Database.Loader();
     await FrameworkLoader(app);
   
     //Middlewares
